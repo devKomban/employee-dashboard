@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  endPoints: {
+    dashboard: {
+      get_user: 'https://jsonplaceholder.typicode.com/users'
+    },
+    tasks: {
+      get_user_tasks: 'https://jsonplaceholder.typicode.com/users/{userId}/todos'
+    }
+  }
 };
 
 /*

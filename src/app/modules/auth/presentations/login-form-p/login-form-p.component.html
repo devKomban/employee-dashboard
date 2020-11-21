@@ -1,0 +1,5 @@
+<form [formGroup]="loginForm" (submit)="authenticate()">
+    <input type="text" FormControlName="strUserName">
+    <input type="password" FormControlName="strPassword">
+    <button type="submit">Login</button>
+</form>
