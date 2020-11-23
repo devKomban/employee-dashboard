@@ -15,4 +15,14 @@ export class TasksService {
     const strUrl = this.objUtiliyService.getEndPoints('tasks', 'get_user_tasks').replace('{userId}', intUserID);
     return this.objHttpService.get(strUrl);
   }
+
+  saveNewEmployeeTask(arrEmployeeeList: any[], intEmployeeId:number, objNewEmployeeTask) {
+    arrEmployeeeList.unshift({
+      "userId": intEmployeeId,
+      "id": Math.random(),
+      "title": objNewEmployeeTask.strTaskDetails,
+      "completed": false
+    })
+    return JSON.parse(JSON.stringify(arrEmployeeeList)); 
+  }
 }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutOneCComponent } from './containers/layout-one-c/layout-one-c.component';
+import { AuthGuard } from '@shared/guards';
 
 const routes: Routes = [
   {
@@ -14,8 +15,15 @@ const routes: Routes = [
       {
         path: 'tasks/:id',
         loadChildren: () => import('../tasks/tasks.module').then(m => m.TasksModule)
+      },
+      {
+        path: '**',
+        redirectTo: '/dashboard'
       }
-    ]
+    ],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    canActivateChild: [AuthGuard]
   }
 ];
 

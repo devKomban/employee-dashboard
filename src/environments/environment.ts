@@ -10,6 +10,9 @@ export const environment = {
     },
     tasks: {
       get_user_tasks: 'https://jsonplaceholder.typicode.com/users/{userId}/todos'
+    },
+    auth: {
+      authenticate_user: 'http://faker.fake/user/authenticate'
     }
   }
 };

@@ -16,4 +16,6 @@ export class UtilityService {
   getEndPoints(strModuleName: string, strUrlKey: string): string {
     return environment.endPoints[strModuleName][strUrlKey]
   }
+
+  
 }

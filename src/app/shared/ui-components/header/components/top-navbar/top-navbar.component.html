@@ -1,10 +1,13 @@
 <mat-toolbar *ngIf="obsTopNavbarData$ | async as objTopNavbarData">
     <span>{{objTopNavbarData.strTitle}}</span>
     <span class="example-spacer"></span>
-    <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        <mat-icon>favorite</mat-icon>
+    <button mat-mini-fab color="primary" [matMenuTriggerFor]="menu" aria-label="User">
+        <mat-icon>account_circle</mat-icon>
     </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-    </button> -->
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="logout()">
+            <mat-icon>lock_open</mat-icon>
+            <span>Logout</span>
+        </button>
+    </mat-menu>
 </mat-toolbar>

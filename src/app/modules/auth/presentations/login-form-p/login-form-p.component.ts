@@ -1,22 +1,25 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy, Input } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { iEvent } from '@shared/models';
 
 
 @Component({
   selector: 'app-login-form-p',
   templateUrl: './login-form-p.component.html',
-  styleUrls: ['./login-form-p.component.scss']
+  styleUrls: ['./login-form-p.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginFormPComponent implements OnInit {
 
+  @Input() strError: string;
   @Output() pEvent = new EventEmitter<iEvent>();
-  loginForm = this.fb.group({
-    strUserName: [''],
-    strPassword: ['']
+
+  loginForm = this.objFB.group({
+    strUserName: ['', Validators.required],
+    strPassword: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private objFB: FormBuilder) { }
 
   ngOnInit(): void {
   }

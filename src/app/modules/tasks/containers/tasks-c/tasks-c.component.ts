@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { take, switchMap, tap } from 'rxjs/operators';
 import { TasksService } from '@shared/services';
@@ -11,21 +11,26 @@ import { AddTaskPComponent } from '@modules/tasks/presentations/add-task-p/add-t
 @Component({
   selector: 'app-tasks-c',
   templateUrl: './tasks-c.component.html',
-  styleUrls: ['./tasks-c.component.scss']
+  styleUrls: ['./tasks-c.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksCComponent implements OnInit {
 
   obsEmployeeTaskList$: Observable<any[]>;
+  arrEmployeeTaskList: any[];
+  intEmployeeId: number;
 
   constructor(private objActRoute: ActivatedRoute,
               private objDialogService: MatDialog,
+              private objChangeDetectionDef: ChangeDetectorRef,
               private objTopNavbarService: TopNavbarService,
               private objTasksService: TasksService) { }
 
   ngOnInit(): void {
-    this.obsEmployeeTaskList$ = this.objActRoute.params
+    this.objActRoute.params
     .pipe(
       switchMap(({id}) => {
+        this.intEmployeeId = id;
         return this.objTasksService.getEmployeeTasksList(id);
       }),
       tap((arrEmployeeTaskList: any[]) => {
@@ -35,7 +40,10 @@ export class TasksCComponent implements OnInit {
         })
       }),
       take(1),
-    );
+    ).subscribe(arrEmployeeeTaskList => {
+      this.arrEmployeeTaskList = arrEmployeeeTaskList;
+      this.objChangeDetectionDef.detectChanges();
+    });
   }
 
   handleChildEvents(objEvent: iEvent) {
@@ -43,7 +51,10 @@ export class TasksCComponent implements OnInit {
       case 'ADD_TASK':
           this.openAddTaskPopup();
         break;
-
+      case 'SAVE_TASK':
+        this.saveNewTask(objEvent.data);
+        break;
+      
       default:
         break;
     }
@@ -54,7 +65,15 @@ export class TasksCComponent implements OnInit {
       width: '400px'
     });
 
+    objDialogRef.componentInstance.pEvent.subscribe(objAddTaskEvents => {
+      this.handleChildEvents(objAddTaskEvents);
+    });
     objDialogRef.afterClosed().subscribe(result => {
     });
+  }
+
+  saveNewTask(objNewEmployeeTask) {
+    this.arrEmployeeTaskList = this.objTasksService.saveNewEmployeeTask(this.arrEmployeeTaskList, this.intEmployeeId, objNewEmployeeTask);    
+    this.objChangeDetectionDef.detectChanges();
   }
 }

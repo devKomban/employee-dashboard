@@ -1,5 +1,22 @@
-<form [formGroup]="loginForm" (submit)="authenticate()">
-    <input type="text" FormControlName="strUserName">
-    <input type="password" FormControlName="strPassword">
-    <button type="submit">Login</button>
+<form [formGroup]="loginForm">
+    <mat-error *ngIf="!!strError">
+        <strong>{{strError}}</strong>
+    </mat-error>
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="strUserName" placeholder="Ex. pat@example.com">
+        <mat-error *ngIf="loginForm.get('strUserName').hasError('required')">
+            Email is
+            <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="strPassword" placeholder="**********">
+        <mat-error *ngIf="loginForm.get('strPassword').hasError('required')">
+            Password is
+            <strong>required</strong>
+        </mat-error>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="authenticate()">Login</button>
 </form>
