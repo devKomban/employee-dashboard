@@ -65,10 +65,11 @@ export class TasksCComponent implements OnInit {
       width: '400px'
     });
 
-    objDialogRef.componentInstance.pEvent.subscribe(objAddTaskEvents => {
+    objDialogRef.componentInstance.pEvent
+    .pipe(take(1))
+    .subscribe(objAddTaskEvents => {
       this.handleChildEvents(objAddTaskEvents);
-    });
-    objDialogRef.afterClosed().subscribe(result => {
+      objDialogRef.close();
     });
   }
 

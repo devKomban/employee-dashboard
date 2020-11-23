@@ -9,7 +9,7 @@ import { iEvent } from '@shared/models';
   styleUrls: ['./add-task-p.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddTaskPComponent implements OnInit {
+export class AddTaskPComponent {
 
   @Output() pEvent = new EventEmitter<iEvent>();
   
@@ -17,16 +17,7 @@ export class AddTaskPComponent implements OnInit {
     strTaskDetails: ['', Validators.required]
   })
 
-
-
   constructor(private objFB: FormBuilder) { }
-
-  ngOnInit(): void {
-    this.addTaskForm.get('strTaskDetails').valueChanges.subscribe(obj => {
-      console.log({obj});
-      
-    })
-  }
 
   addTask() {
     if (!this.addTaskForm.valid)

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnChanges, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnChanges, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 
-export interface UserData {
+export interface iUserData {
   name: string;
   phone: string;
   email: string;
@@ -13,24 +13,28 @@ export interface UserData {
 @Component({
   selector: 'app-user-list-p',
   templateUrl: './user-list-p.component.html',
-  styleUrls: ['./user-list-p.component.scss']
+  styleUrls: ['./user-list-p.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserListPComponent implements OnChanges, OnInit, AfterViewInit {
+export class UserListPComponent implements OnChanges, AfterViewInit {
 
   @Input() arrEmployees: any[];
 
   displayedColumns: string[] = ['name', 'phone', 'email'];
-  dataSource: MatTableDataSource<UserData>;
+  dataSource = new MatTableDataSource<iUserData>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(private objChangeRef: ChangeDetectorRef) {
+    this.dataSource.filterPredicate = (objTask: iUserData, strFilter: string) => {
+      return ('' + objTask.name).toLocaleLowerCase().indexOf(strFilter) !== -1
+    }
+  }
 
   ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.arrEmployees || []);    
-  }
-  ngOnInit(): void {
+    this.dataSource.data = this.arrEmployees || [];
+    this.objChangeRef.detectChanges();
   }
 
   ngAfterViewInit() {

@@ -8,10 +8,6 @@ const routes: Routes = [
     path:'login',
     component: LoginCComponent,
     canActivate: [SkipLoginGuard]
-  },
-  {
-    path: '**',
-    redirectTo: '/dashboard'
   }
 ];
 

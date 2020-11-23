@@ -1,5 +1,6 @@
 <form [formGroup]="loginForm">
-    <mat-error *ngIf="!!strError">
+    <h1>Login</h1>
+    <mat-error class="sever-error" *ngIf="!!strError">
         <strong>{{strError}}</strong>
     </mat-error>
     <mat-form-field>

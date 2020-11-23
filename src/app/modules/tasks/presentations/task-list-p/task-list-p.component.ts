@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, OnChanges, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { iEvent } from '@shared/models';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
-export interface TaskData {
+export interface iTaskData {
   userId: number;
   id: number;
   title: string;
@@ -17,34 +19,59 @@ export interface TaskData {
   templateUrl: './task-list-p.component.html',
   styleUrls: ['./task-list-p.component.scss']
 })
-export class TaskListPComponent implements OnInit {
+export class TaskListPComponent implements OnChanges, AfterViewInit, OnDestroy  {
 
   @Input() arrEmployeeTaskList: any[];
 
   @Output() pEvent = new EventEmitter<iEvent>();
   
   displayedColumns: string[] = ['title', 'completed'];
-  dataSource: MatTableDataSource<TaskData>;
+  dataSource = new MatTableDataSource<iTaskData>();
+  
+  obsUnsubscribeAll$ = new Subject();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  status = new FormControl('ALL', [
-    Validators.required
-  ]);
+  filterTasks = this.objFb.group({
+    strStatus: ['ALL']    
+  })
 
-  constructor() { }
+  constructor(private objFb: FormBuilder) {
 
-  ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.arrEmployeeTaskList || []);
+    this.dataSource.filterPredicate = (objTask: iTaskData, strFilter: string) => {
+      return ('' + objTask.completed).indexOf(strFilter) !== -1
+    }
   }
 
-  ngOnInit(): void {
+  ngOnChanges() {
+    this.dataSource.data = this.arrEmployeeTaskList || [];
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.filterTasks.valueChanges
+    .pipe(
+      takeUntil(this.obsUnsubscribeAll$)
+    )
+      .subscribe(({ strStatus }) => {
+
+        if (strStatus !== 'ALL')
+          this.dataSource.filter = strStatus.trim().toLowerCase();
+        else
+          this.dataSource.filter = '';
+
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
+    })
+  }
+
+  ngOnDestroy() {
+    this.obsUnsubscribeAll$.next(null);
+    this.obsUnsubscribeAll$.complete();
   }
 
   applyFilter(event: Event) {

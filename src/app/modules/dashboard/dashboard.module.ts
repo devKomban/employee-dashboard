@@ -8,6 +8,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardCComponent } from './containers/dashboard-c/dashboard-c.component';
 import { UserListPComponent } from '@modules/dashboard/presentations/user-list-p/user-list-p.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatIconModule,    
 
     DashboardRoutingModule
   ]
