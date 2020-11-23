@@ -13,6 +13,10 @@ import { Observable } from 'rxjs';
 })
 export class DashboardCComponent implements OnInit {
 
+  /**
+   * Employee list observable
+   * fetch data from server
+   */
   obsEmployeeList$: Observable<any[]>;
 
   constructor(private objTopNavbarService: TopNavbarService,
@@ -22,6 +26,9 @@ export class DashboardCComponent implements OnInit {
     this.obsEmployeeList$ = this.objDashboardService.getEmployeeList()
     .pipe(
       take(1),
+      /**
+       * data to show in top nav bar
+       */
       tap((arrEmployeeList: any[]) => {
         this.objTopNavbarService.sendDataToTopNavbar({
           strTitle: 'Employees',

@@ -13,14 +13,23 @@ import { iEvent } from '@shared/models';
 export class TopNavbarComponent implements OnInit {
 
   @Output() pEvent = new EventEmitter<iEvent>();
+  /**
+   * get the data passed to the top nav bar by other components
+   */
   obsTopNavbarData$: Observable<iTopNavbar>;
 
   constructor(private objTopNavbarService: TopNavbarService) { }
 
   ngOnInit(): void {
+    /**
+     * using subject only to listen and not to pass data
+     */
     this.obsTopNavbarData$ = this.objTopNavbarService.obsTopNavbarData$.asObservable();
   }
 
+  /**
+   * Logout current user
+   */
   logout() {
     this.pEvent.emit({
       operation: 'LOGOUT'

@@ -13,12 +13,18 @@ export class AddTaskPComponent {
 
   @Output() pEvent = new EventEmitter<iEvent>();
   
+  /**
+   * Form object
+   */
   addTaskForm = this.objFB.group({
     strTaskDetails: ['', Validators.required]
   })
 
   constructor(private objFB: FormBuilder) { }
 
+  /**
+   * Add new task for current employee
+   */
   addTask() {
     if (!this.addTaskForm.valid)
       return

@@ -18,15 +18,31 @@ export interface iUserData {
 })
 export class UserListPComponent implements OnChanges, AfterViewInit {
 
+  /**
+   * Employee list array from parent
+   */
   @Input() arrEmployees: any[];
 
+  /**
+   * Necessary column to display in the table
+   */
   displayedColumns: string[] = ['name', 'phone', 'email'];
+
+  /**
+   * table mat source object
+   */
   dataSource = new MatTableDataSource<iUserData>();
 
+  /**
+   * Pagination and sorting
+   */
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private objChangeRef: ChangeDetectorRef) {
+    /**
+     * set custom filteration for the mat table
+     */
     this.dataSource.filterPredicate = (objTask: iUserData, strFilter: string) => {
       return ('' + objTask.name).toLocaleLowerCase().indexOf(strFilter) !== -1
     }
@@ -42,6 +58,10 @@ export class UserListPComponent implements OnChanges, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
+  /**
+   * Filter current table data using search key
+   * @param event 
+   */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

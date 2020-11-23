@@ -13,6 +13,10 @@ export class LayoutOneCComponent {
   constructor(private objAuthService: AuthService,
               private objRoute: Router) { }
 
+  /**
+   * Function to handle all child events
+   * @param objEvent 
+   */
   handleChildEvents(objEvent: iEvent) {
     switch (objEvent.operation) {
       case 'LOGOUT':

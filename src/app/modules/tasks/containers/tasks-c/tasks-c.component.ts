@@ -16,8 +16,17 @@ import { AddTaskPComponent } from '@modules/tasks/presentations/add-task-p/add-t
 })
 export class TasksCComponent implements OnInit {
 
+  /**
+   * Observerable fetching all employee tasks from server from server 
+   */
   obsEmployeeTaskList$: Observable<any[]>;
+  /**
+   * List of employee task 
+   */
   arrEmployeeTaskList: any[];
+  /**
+   * Current employee id used for saving new task
+   */
   intEmployeeId: number;
 
   constructor(private objActRoute: ActivatedRoute,
@@ -33,6 +42,9 @@ export class TasksCComponent implements OnInit {
         this.intEmployeeId = id;
         return this.objTasksService.getEmployeeTasksList(id);
       }),
+      /**
+       * Title and count send to top nav 
+       */
       tap((arrEmployeeTaskList: any[]) => {
         this.objTopNavbarService.sendDataToTopNavbar({
           strTitle: 'Employee Tasks',
@@ -46,6 +58,10 @@ export class TasksCComponent implements OnInit {
     });
   }
 
+  /**
+   * Function to handle all child events
+   * @param objEvent 
+   */
   handleChildEvents(objEvent: iEvent) {
     switch (objEvent.operation) {
       case 'ADD_TASK':

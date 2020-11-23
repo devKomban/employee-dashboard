@@ -21,24 +21,46 @@ export interface iTaskData {
 })
 export class TaskListPComponent implements OnChanges, AfterViewInit, OnDestroy  {
 
-  @Input() arrEmployeeTaskList: any[];
+  /**
+   * Array of all tasksd of current empoloyee
+   */
+  @Input() arrEmployeeTaskList: iTaskData[];
 
   @Output() pEvent = new EventEmitter<iEvent>();
   
-  displayedColumns: string[] = ['title', 'completed'];
+  /**
+   * List of columns to display in the table
+   */
+  displayedColumns: string[] = ['title'];
+
+  /**
+   * Data source object
+   */
   dataSource = new MatTableDataSource<iTaskData>();
   
+  /**
+   * Subject to unsubscribe all observerables during onDestroy
+   */
   obsUnsubscribeAll$ = new Subject();
 
+  /**
+   * Table pagination and sort object
+   */
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  /**
+   * Form object
+   */
   filterTasks = this.objFb.group({
     strStatus: ['ALL']    
   })
 
   constructor(private objFb: FormBuilder) {
 
+    /**
+     * Custom filteration for datasource
+     */
     this.dataSource.filterPredicate = (objTask: iTaskData, strFilter: string) => {
       return ('' + objTask.completed).indexOf(strFilter) !== -1
     }
@@ -52,6 +74,9 @@ export class TaskListPComponent implements OnChanges, AfterViewInit, OnDestroy  
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
+    /**
+     * List to value change from filter and update the table
+     */
     this.filterTasks.valueChanges
     .pipe(
       takeUntil(this.obsUnsubscribeAll$)
@@ -70,19 +95,16 @@ export class TaskListPComponent implements OnChanges, AfterViewInit, OnDestroy  
   }
 
   ngOnDestroy() {
+    /**
+     * Unsubscribing all observables
+     */
     this.obsUnsubscribeAll$.next(null);
     this.obsUnsubscribeAll$.complete();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
+  /**
+   * Add new task to the current user
+   */
   addNewTask(){
     this.pEvent.emit({
       operation: 'ADD_TASK'

@@ -7,6 +7,9 @@ import { iTopNavbar } from '@shared/ui-components/header/components/top-navbar/t
 })
 export class TopNavbarService {
 
+  /**
+   * Transer data to the top nav bar
+   */
   obsTopNavbarData$ = new BehaviorSubject(null);
 
   constructor() { }
