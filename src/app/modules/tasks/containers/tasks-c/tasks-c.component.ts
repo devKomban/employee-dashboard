@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { take, switchMap, tap } from 'rxjs/operators';
-import { TasksService } from '@shared/services';
+import { TasksService, LoadingService } from '@shared/services';
 import { Observable } from 'rxjs';
 import { TopNavbarService } from '@shared/ui-components/header/components/top-navbar/top-navbar.service';
 import { iEvent } from '@shared/models';
@@ -33,14 +33,19 @@ export class TasksCComponent implements OnInit {
               private objDialogService: MatDialog,
               private objChangeDetectionDef: ChangeDetectorRef,
               private objTopNavbarService: TopNavbarService,
+              private objLoadingService: LoadingService,                  
               private objTasksService: TasksService) { }
 
   ngOnInit(): void {
+    this.objLoadingService.showSpinner();
     this.objActRoute.params
     .pipe(
       switchMap(({id}) => {
         this.intEmployeeId = id;
         return this.objTasksService.getEmployeeTasksList(id);
+      }),
+      tap(() => {
+        this.objLoadingService.hideSpinner();
       }),
       /**
        * Title and count send to top nav 

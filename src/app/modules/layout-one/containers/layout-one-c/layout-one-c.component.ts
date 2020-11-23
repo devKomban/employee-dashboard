@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { iEvent } from '@shared/models';
-import { AuthService } from '@shared/services';
+import { AuthService, LoadingService } from '@shared/services';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-layout-one-c',
@@ -10,7 +11,10 @@ import { Router } from '@angular/router';
 })
 export class LayoutOneCComponent {
 
+  obsSpinnerValue$ = this.objLoadingService.getSpinnerStatus();
+  
   constructor(private objAuthService: AuthService,
+              private objLoadingService: LoadingService,
               private objRoute: Router) { }
 
   /**
